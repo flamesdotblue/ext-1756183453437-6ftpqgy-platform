@@ -1,0 +1,110 @@
+:root {
+  --bg: #0a0a0a;
+  --fg: #e6e6e6;
+  --muted: #b9b9b9;
+  --accent: #e63946;
+  --ink: #0f0f10;
+}
+
+* { box-sizing: border-box }
+html, body, #root { height: 100% }
+html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+
+.wrap { position: relative; overflow-x: hidden }
+
+/* Global texture overlay via repeating gradients and embedded SVG noise */
+body::before {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(1200px 600px at 120% -20%, rgba(230,57,70,0.08), transparent 70%),
+    radial-gradient(800px 400px at -10% 120%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.4)),
+    url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'>\
+        <filter id='n'>\
+          <feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/>\
+          <feColorMatrix type='saturate' values='0'/>\
+          <feComponentTransfer>\
+            <feFuncA type='table' tableValues='0 0 0 .05 .12 .05 0 0'/>\
+          </feComponentTransfer>\
+        </filter>\
+        <rect width='100%' height='100%' filter='url(%23n)'/>\
+      </svg>");
+  background-blend-mode: overlay, normal, multiply, normal;
+  opacity: 0.4;
+}
+
+.scribble { font-family: 'Rock Salt', cursive; letter-spacing: 0.5px }
+
+.nav { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.2rem; background: rgba(7,7,7,0.65); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(255,255,255,0.06) }
+.nav .brand { display: flex; flex-direction: column; line-height: 1 }
+.nav .brand .scribble { font-size: 1.2rem }
+.nav .brand .tag { color: var(--muted); font-size: 0.75rem; opacity: 0.8 }
+.nav nav { display: flex; gap: 1rem; align-items: center }
+.nav a { color: var(--fg); text-decoration: none; font-weight: 600; opacity: 0.9 }
+.nav a:hover { opacity: 1 }
+.nav .cta { color: var(--accent) }
+
+.hero { position: relative; min-height: 86vh; display: grid; place-items: center; isolation: isolate }
+.videoWrap { position: absolute; inset: 0; overflow: hidden; z-index: -1 }
+.bgVideo { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.6) contrast(1.2) brightness(0.6) }
+.grain { position: absolute; inset: -10%; pointer-events: none; mix-blend-mode: overlay; opacity: 0.6; background: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'>\
+    <filter id='g'>\
+      <feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/>\
+      <feColorMatrix type='saturate' values='0'/>\
+    </filter>\
+    <rect width='100%' height='100%' filter='url(%23g)' opacity='0.15'/>\
+  </svg>") repeat; background-size: 200px 200px }
+.vignette { position: absolute; inset: 0; box-shadow: inset 0 0 200px 80px rgba(0,0,0,0.9), inset 0 -120px 180px 0 rgba(0,0,0,0.8) }
+
+.heroContent { text-align: center; max-width: 900px; padding: 4rem 1rem; animation: floatIn 1000ms ease-out both }
+.title { font-size: clamp(2.2rem, 5vw, 4rem); margin: 0 0 1rem; text-transform: lowercase }
+.lede { color: var(--muted); font-size: clamp(1rem, 2.2vw, 1.2rem); margin: 0 auto 1.5rem; line-height: 1.6 }
+.actions { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap }
+.button { border: 1px solid rgba(255,255,255,0.18); padding: .7rem 1rem; border-radius: 999px; text-decoration: none; color: var(--fg); font-weight: 600; transition: transform .2s, background .2s, border-color .2s }
+.button:hover { transform: translateY(-2px) }
+.button.primary { background: linear-gradient(180deg, rgba(230,57,70,0.18), rgba(230,57,70,0.08)); border-color: rgba(230,57,70,0.35) }
+.button.ghost { background: rgba(255,255,255,0.02) }
+
+.shows { padding: 4rem 1rem; max-width: 1200px; margin: 0 auto }
+.shows h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0 0 1.2rem }
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1rem }
+.card { grid-column: span 12; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; overflow: hidden; position: relative; transition: transform .25s ease, box-shadow .25s ease }
+.card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.4) }
+@media (min-width: 700px) {
+  .card { grid-column: span 4 }
+}
+.imgWrap { position: relative; aspect-ratio: 4/3; overflow: hidden }
+.imgWrap img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) saturate(0.7) brightness(0.8) }
+.cardGrain { position: absolute; inset: 0; background: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'>\
+    <filter id='n2'>\
+      <feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/>\
+      <feColorMatrix type='saturate' values='0'/>\
+    </filter>\
+    <rect width='100%' height='100%' filter='url(%23n2)' opacity='0.18'/>\
+  </svg>"); mix-blend-mode: overlay; pointer-events: none }
+.meta { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem; padding: .9rem 1rem 1rem }
+.meta .city { text-transform: uppercase; letter-spacing: 1.6px; font-size: .75rem; color: var(--muted) }
+.meta h3 { margin: .2rem 0 .1rem; font-size: 1.2rem }
+.meta .date { color: var(--accent); font-weight: 700 }
+
+.about { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 1100px; margin: 0 auto; padding: 4rem 1rem }
+@media (min-width: 860px) { .about { grid-template-columns: 1.2fr .8fr } }
+.about .copy p { color: var(--muted); line-height: 1.7 }
+.polaroid { display: grid; place-items: center }
+.frame { background: #111; padding: .7rem .7rem 2rem; border-radius: 6px; box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06) }
+.frame img { width: min(100%, 460px); display: block; filter: grayscale(40%) contrast(1.15) }
+
+.footer { padding: 3rem 1rem 4rem; border-top: 1px solid rgba(255,255,255,0.06); background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)); text-align: center }
+.footer .fineprint { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; color: var(--muted); font-size: .9rem }
+
+@keyframes floatIn {
+  from { transform: translateY(8px); opacity: 0 }
+  to { transform: translateY(0px); opacity: 1 }
+}
+
+/* Subtle selection color */
+::selection { background: rgba(230,57,70,0.35) }
